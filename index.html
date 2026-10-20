@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Escritório ERP Agro</title>
+<style>
+  :root {
+    --fundo: #f6f7f4; --cartao: #ffffff; --texto: #1d2420; --suave: #5f6b64; --linha: #e2e6e1;
+    --verde: #2f7d4f; --verde-claro: #e3f1e8; --ambar: #a86b00; --ambar-claro: #fbf0d9;
+    --vermelho: #b3261e; --azul: #2b5c8a; --barra: #dfe5df;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fundo: #121614; --cartao: #1b211e; --texto: #e7ece8; --suave: #9aa69f; --linha: #2c3430;
+      --verde: #6cc48f; --verde-claro: #1f3528; --ambar: #e3b34f; --ambar-claro: #3a3020;
+      --vermelho: #f2857c; --azul: #8bb8e3; --barra: #2c3430;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fundo); color: var(--texto);
+         font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between;
+           padding: 18px 16px 6px; max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 20px; margin: 0; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--suave); margin: 0 0 10px; }
+  main { max-width: 1200px; margin: 0 auto; padding: 8px 16px 40px; display: grid; gap: 14px;
+         grid-template-columns: repeat(12, 1fr); }
+  section { background: var(--cartao); border: 1px solid var(--linha); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+  .c4 { grid-column: span 4; } .c6 { grid-column: span 6; } .c8 { grid-column: span 8; } .c12 { grid-column: span 12; }
+  @media (max-width: 900px) { .c4, .c6, .c8 { grid-column: span 12; } }
+  .suave { color: var(--suave); font-size: 13px; }
+  .numero { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 600px) { .numero { font-size: 19px; } }
+  .barra { height: 8px; background: var(--barra); border-radius: 4px; overflow: hidden; margin: 4px 0 10px; }
+  .barra > i { display: block; height: 100%; background: var(--verde); }
+  .barra.alerta > i { background: var(--ambar); } .barra.critico > i { background: var(--vermelho); }
+  ul.lista { list-style: none; margin: 0; padding: 0; }
+  ul.lista li { padding: 8px 0; border-top: 1px solid var(--linha); display: flex; gap: 10px; align-items: baseline; }
+  ul.lista li:first-child { border-top: 0; }
+  .ponto { width: 9px; height: 9px; border-radius: 50%; background: var(--verde); flex: none; transform: translateY(-1px); }
+  .ponto.ocioso { background: var(--barra); }
+  ul.lista li.grupo { display: block; }
+  .grupo .quem { display: flex; gap: 8px; align-items: baseline; padding: 4px 0 0 4px; font-size: 14px; }
+  .tag { font-size: 12px; padding: 1px 7px; border-radius: 9px; background: var(--verde-claro); color: var(--verde); white-space: nowrap; }
+  .tag.dono { background: var(--ambar-claro); color: var(--ambar); }
+  .tag.alto { background: transparent; color: var(--vermelho); border: 1px solid currentColor; }
+  a { color: var(--azul); text-decoration: none; } a:hover { text-decoration: underline; }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  th, td { text-align: right; padding: 6px 4px; border-top: 1px solid var(--linha); }
+  th { color: var(--suave); font-weight: 500; font-size: 13px; border-top: 0; }
+  th:first-child, td:first-child { text-align: left; }
+  .tabela { overflow-x: auto; }
+  .colunas { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); gap: 8px; overflow-x: auto; }
+  .coluna h3 { font-size: 13px; margin: 0 0 6px; display: flex; justify-content: space-between; }
+  .coluna .item { background: var(--fundo); border: 1px solid var(--linha); border-radius: 7px; padding: 6px 8px;
+                  margin-bottom: 6px; font-size: 13px; }
+  .vazio { color: var(--suave); font-size: 13px; padding: 6px 0; }
+  #login { max-width: 360px; margin: 12vh auto; padding: 0 16px; }
+  #login section { padding: 22px; }
+  label { display: block; font-size: 13px; color: var(--suave); margin: 10px 0 4px; }
+  input { width: 100%; padding: 9px 10px; border: 1px solid var(--linha); border-radius: 7px;
+          background: var(--fundo); color: var(--texto); font: inherit; }
+  button { margin-top: 14px; width: 100%; padding: 10px; border: 0; border-radius: 7px; background: var(--verde);
+           color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+  button.link { background: none; color: var(--azul); width: auto; padding: 0; margin: 0; font-weight: 400; }
+  .erro { color: var(--vermelho); font-size: 13px; margin-top: 10px; min-height: 1em; }
+
+  /* Sala animada (#14): desenho isométrico em SVG, só com CSS. */
+  :root {
+    --s-piso: #ece5d6; --s-piso-linha: #ddd4c2; --s-laje: #c9bea8; --s-parede-e: #d9e6dd; --s-parede-d: #e8efe7;
+    --s-tampo-parede: #f7f9f6; --s-rodape: #c3d1c7; --s-mesa-topo: #e4c69a; --s-mesa-frente: #c99c66;
+    --s-mesa-lado: #b38750; --s-contorno: #3b4a42; --s-tela-off: #3a4148; --s-tela-on: #c4f5df; --s-codigo: #2f7d4f;
+    --s-moldura: #2e353b; --s-balao: #ffffff; --s-quadro: #fbfaf5; --s-cadeira: #8796a0; --s-papel: #ffffff;
+    --s-porta: #c99a68; --s-janela: #cde7f6; --s-folha: #6fb07f; --s-vaso: #d98c5f; --s-visor: #26303a;
+    --s-olho: #8ff5c8; --s-realce: rgba(47, 125, 79, .16);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --s-piso: #29302c; --s-piso-linha: #323a35; --s-laje: #1d2320; --s-parede-e: #222b26; --s-parede-d: #2a332e;
+      --s-tampo-parede: #3a453f; --s-rodape: #36423b; --s-mesa-topo: #7a6142; --s-mesa-frente: #5e4930;
+      --s-mesa-lado: #4e3c27; --s-contorno: #0e1210; --s-tela-off: #15191c; --s-tela-on: #3fbf86; --s-codigo: #0d3b25;
+      --s-moldura: #0b0e10; --s-balao: #1b211e; --s-quadro: #2f3833; --s-cadeira: #55636b; --s-papel: #dfe3dc;
+      --s-porta: #7d6043; --s-janela: #33506a; --s-folha: #4f8f61; --s-vaso: #9c6343; --s-visor: #0f1418;
+      --s-olho: #6cf0b6; --s-realce: rgba(108, 196, 143, .18);
+    }
+  }
+  .sala-caixa { position: relative; }
+  .sala { display: block; width: 100%; max-width: 1000px; height: auto; margin: 0 auto; user-select: none; }
+  .sala text { font-family: inherit; fill: var(--texto); }
+  .sala .piso { fill: var(--s-piso); } .sala .piso-linha { stroke: var(--s-piso-linha); stroke-width: 1; }
+  .sala .laje { fill: var(--s-laje); } .sala .parede-e { fill: var(--s-parede-e); } .sala .parede-d { fill: var(--s-parede-d); }
+  .sala .tampo-parede { fill: var(--s-tampo-parede); } .sala .rodape { fill: var(--s-rodape); }
+  .sala .janela { fill: var(--s-janela); } .sala .caixilho { fill: none; stroke: var(--s-tampo-parede); stroke-width: 4; }
+  .sala .porta { fill: var(--s-porta); } .sala .batente { fill: var(--s-tampo-parede); } .sala .macaneta { fill: #e3b34f; }
+  .sala .folha { fill: var(--s-folha); } .sala .vaso.topo { fill: #6b4a33; } .sala .vaso.frente, .sala .vaso.lado { fill: var(--s-vaso); }
+  .sala .mesa.topo, .sala .bandeja.topo { fill: var(--s-mesa-topo); }
+  .sala .mesa.frente, .sala .bandeja.frente { fill: var(--s-mesa-frente); }
+  .sala .mesa.lado, .sala .bandeja.lado { fill: var(--s-mesa-lado); }
+  .sala .bandeja.topo { fill: #8a6a45; }
+  .sala .papel.topo { fill: var(--s-papel); } .sala .papel.frente, .sala .papel.lado { fill: #cfc8b8; }
+  .sala .pe, .sala .moldura { fill: var(--s-moldura); }
+  .sala .tela { fill: var(--s-tela-off); } .sala .tela.acesa { fill: var(--s-tela-on); }
+  .sala .codigo { fill: var(--s-codigo); opacity: .75; }
+  .sala .teclado { fill: #59646b; }
+  .sala .cadeira { fill: var(--s-cadeira); }
+  .sala .corpo { fill: var(--cor); stroke: var(--s-contorno); stroke-width: 1.4; }
+  .sala .painel { fill: rgba(255, 255, 255, .55); } .sala .led { fill: #2f7d4f; } .sala .gravata { fill: #2f7d4f; }
+  .sala .visor { fill: var(--s-visor); }
+  .sala .olho { fill: var(--s-olho); }
+  .sala .olho-fechado { fill: none; stroke: var(--s-olho); stroke-width: 2; stroke-linecap: round; opacity: .7; }
+  .sala .haste { stroke: var(--s-contorno); stroke-width: 2; }
+  .sala .lampada { fill: #b9c2bd; stroke: var(--s-contorno); stroke-width: 1; }
+  .sala .trabalhando .lampada { fill: #ffcf5a; }
+  .sala .braco { stroke: var(--cor); stroke-width: 7; stroke-linecap: round; }
+  .sala .mao { fill: var(--cor); stroke: var(--s-contorno); stroke-width: 1.2; }
+  .sala .placa { fill: var(--s-quadro); stroke: var(--s-contorno); stroke-width: .8; }
+  .sala .placa-texto { font-size: 9.5px; font-weight: 700; }
+  .sala .contador circle { fill: var(--azul); } .sala .contador text { fill: #fff; font-size: 11px; font-weight: 700; }
+  .sala .brilho { fill: none; stroke: var(--ambar); stroke-width: 4; stroke-linejoin: round; }
+  .sala .quadro { fill: var(--s-quadro); stroke: var(--s-contorno); stroke-width: 1.5; }
+  .sala .quadro-titulo { font-size: 15px; font-weight: 700; } .sala .quadro-rotulo { font-size: 13px; fill: var(--suave); }
+  .sala .quadro-valor { font-size: 19px; font-weight: 700; }
+  .sala .trilho { fill: var(--barra); } .sala .nivel { fill: var(--verde); }
+  .sala .nivel.alerta { fill: var(--ambar); } .sala .nivel.critico { fill: var(--vermelho); }
+  .sala .relogio { fill: var(--s-quadro); stroke: var(--s-contorno); stroke-width: 1.5; }
+  .sala .ponteiro { stroke: var(--s-contorno); stroke-width: 2; stroke-linecap: round; }
+  .sala .balao { fill: var(--s-balao); stroke: var(--s-contorno); stroke-width: 1.2; }
+  .sala .balao.dono { fill: var(--ambar-claro); stroke: var(--ambar); }
+  .sala .b1 { font-size: 14px; font-weight: 700; } .sala .b2 { font-size: 11px; fill: var(--suave); }
+  .sala .b-curto { display: none; } .sala .bc { font-size: 19px; font-weight: 700; }
+  .sala .zz text { font-weight: 700; fill: var(--suave); opacity: .9; }
+  .sala .realce { fill: transparent; stroke: transparent; stroke-width: 2; }
+  .sala .estacao { cursor: pointer; outline: none; }
+  .sala .estacao:hover .realce, .sala .estacao:focus-visible .realce { fill: var(--s-realce); stroke: var(--verde); }
+  .sala .estacao:focus-visible .quadro { stroke: var(--verde); stroke-width: 3; }
+  @media (max-width: 640px) { .sala .b-largo { display: none; } .sala .b-curto { display: inline; } }
+
+  .sala .trabalhando .mao-e, .sala .trabalhando .mao-d { animation: digita .3s ease-in-out infinite alternate; }
+  .sala .trabalhando .mao-d { animation-delay: .15s; }
+  .sala .trabalhando .lampada { animation: pisca 1.4s steps(2, jump-none) infinite; }
+  .sala .trabalhando .cursor { animation: pisca 1s steps(2, jump-none) infinite; }
+  .sala .ocioso .cabeca { transform: rotate(-9deg); transform-box: fill-box; transform-origin: 50% 100%; }
+  .sala .zz text { animation: zz 3.2s ease-in infinite; }
+  .sala .zz text:nth-child(2) { animation-delay: 1.05s; } .sala .zz text:nth-child(3) { animation-delay: 2.1s; }
+  .sala .piscando { animation: pisca-suave 1.1s ease-in-out infinite alternate; }
+  @keyframes digita { to { transform: translateY(-3px); } }
+  @keyframes pisca { 50% { opacity: .25; } }
+  @keyframes pisca-suave { from { opacity: .2; } to { opacity: 1; } }
+  @keyframes zz { 0% { opacity: 0; transform: translate(0, 0); } 30% { opacity: .9; } 100% { opacity: 0; transform: translate(7px, -18px); } }
+  @media (prefers-reduced-motion: reduce) { .sala *, .sala *::before { animation: none !important; } }
+
+  .detalhe { position: absolute; z-index: 5; width: min(340px, 100%); background: var(--cartao); color: var(--texto);
+             border: 1px solid var(--linha); border-radius: 10px; padding: 12px 14px; box-shadow: 0 8px 24px rgba(0, 0, 0, .18); }
+  .detalhe h3 { font-size: 15px; margin: 0 28px 2px 0; }
+  .detalhe h4 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--suave); margin: 10px 0 2px; }
+  .detalhe ul.lista li { padding: 5px 0; font-size: 13px; display: block; }
+  .detalhe .fechar { position: absolute; top: 6px; right: 8px; width: 28px; height: 28px; margin: 0; padding: 0;
+                     background: none; color: var(--suave); font-size: 20px; line-height: 1; }
+  .so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .demo { background: var(--ambar-claro); color: var(--ambar); border-radius: 7px; padding: 6px 10px; font-size: 13px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div id="login" hidden>
+  <section>
+    <h1>Escritório ERP Agro</h1>
+    <p class="suave">Entre com o usuário do projeto erp-escritorio.</p>
+    <form id="form-login">
+      <label for="email">E-mail</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="senha">Senha</label>
+      <input id="senha" type="password" autocomplete="current-password" required>
+      <button type="submit">Entrar</button>
+      <div class="erro" id="erro-login"></div>
+    </form>
+  </section>
+</div>
+
+<div id="painel" hidden>
+  <header>
+    <h1 id="titulo">Escritório ERP Agro</h1>
+    <nav class="suave" id="escritorios"></nav>
+    <div class="suave"><span id="atualizado">carregando…</span> · <button class="link" id="sair">sair</button></div>
+  </header>
+  <main>
+    <section class="c12" id="secao-sala">
+      <h2 id="sala-titulo">A sala</h2>
+      <div class="demo" id="aviso-demo" hidden>Demonstração com dados fictícios. Nada aqui vem do banco.</div>
+      <div class="sala-caixa" id="sala-caixa">
+        <svg class="sala" id="sala" viewBox="12 15 1084 795" role="group" aria-labelledby="sala-titulo" aria-describedby="sala-resumo"></svg>
+        <div class="detalhe" id="sala-detalhe" role="dialog" aria-labelledby="det-titulo" hidden>
+          <button type="button" class="fechar" id="det-fechar" aria-label="Fechar">×</button>
+          <div id="det-conteudo"></div>
+        </div>
+      </div>
+      <p class="so-leitor" id="sala-resumo"></p>
+      <p class="suave" style="margin:6px 0 0">Toque num robô, na mesa do Rogério ou no quadro para ver detalhes.</p>
+    </section>
+
+    <section class="c4">
+      <h2>Aguardando você</h2>
+      <ul class="lista" id="aguardando"></ul>
+    </section>
+    <section class="c8">
+      <h2>Trabalhando agora</h2>
+      <ul class="lista" id="agora"></ul>
+    </section>
+
+    <section class="c8">
+      <h2>Custo equivalente (R$)</h2>
+      <div class="kpis">
+        <div><div class="suave">Hoje</div><div class="numero" id="k-hoje">–</div></div>
+        <div><div class="suave">7 dias</div><div class="numero" id="k-semana">–</div></div>
+        <div><div class="suave">30 dias</div><div class="numero" id="k-mes">–</div></div>
+      </div>
+      <p class="suave" style="margin:10px 0 0">Quanto custaria pela API. No plano Max o custo real é a mensalidade fixa;
+        use estes valores para comparar tarefas e agentes.</p>
+    </section>
+    <section class="c4">
+      <h2>Plano Max</h2>
+      <div class="suave">Janela de 5 horas <span id="p5">–</span></div>
+      <div class="barra" id="b5"><i style="width:0"></i></div>
+      <div class="suave">Semana <span id="ps">–</span></div>
+      <div class="barra" id="bs"><i style="width:0"></i></div>
+      <div class="suave" id="p-quando"></div>
+    </section>
+
+    <section class="c12">
+      <h2>Fila</h2>
+      <div class="colunas" id="fila"></div>
+    </section>
+
+    <section class="c6">
+      <h2>Custo por agente</h2>
+      <div class="tabela"><table id="t-agente"></table></div>
+    </section>
+    <section class="c6">
+      <h2>Custo por tarefa (30 dias)</h2>
+      <div class="tabela"><table id="t-issue"></table></div>
+    </section>
+
+    <section class="c12">
+      <h2>Atividade recente</h2>
+      <ul class="lista" id="atividade"></ul>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+// Chaves públicas (feitas para ficar no navegador). Os dados só aparecem após login + RLS.
+const SUPABASE_URL = 'https://jupfhkconoosruzseswn.supabase.co';
+const SUPABASE_PUBLICA = 'sb_publishable_MFhl_XToi93PwGsWRDcg_g_guQDsV6r';
+// Um painel para todos os escritórios (ERP, BI e os próximos): ?e=<id> escolhe qual mostrar.
+// Os escritórios novos gravam a coluna `escritorio` e usam a tabela `fila_escritorios` (banco/003 de escritorios-comum).
+// A sala monta uma mesa por agente declarado em `agentes`, na ordem das fileiras (4 por fileira);
+// `placa` é o nome curto na mesa (padrão: o nome). Agente não declarado senta na mesa do assistente,
+// que entra no fim da lista se o escritório não a posicionar. `pilha`: coluna do quadro → mesa que
+// mostra a pilha de papéis ('lider-tecnico' = mesa do líder). "Aguardando dono" e "Homologação"
+// sempre vão para a mesa do Rogério.
+const ASSISTENTE = { id: 'assistente', nome: 'Assistente', cor: '#c9ccd1' };
+const ESCRITORIOS = {
+  erp: { nome: 'ERP Agro', repo: 'https://github.com/EfetivaGestao/erp-agro',
+         colunas: ['Ideia', 'Spec', 'Aguardando dono', 'Desenvolvimento', 'Revisão', 'Homologação', 'Concluído'],
+         agentes: [
+           { id: 'analista-processos', nome: 'Analista de processos', placa: 'Analista', cor: '#8fbfe6' },
+           { id: 'especialista-fiscal', nome: 'Especialista fiscal', placa: 'Fiscal', cor: '#f3bf86' },
+           { id: 'guardiao-dados', nome: 'Guardião de dados', placa: 'Dados', cor: '#b9a7e3' },
+           { id: 'auditor-lgpd', nome: 'Auditor LGPD', placa: 'LGPD', cor: '#9fd4d4' },
+           ASSISTENTE,
+           { id: 'desenvolvedor', nome: 'Desenvolvedor', cor: '#86d0ab' },
+           { id: 'integrador', nome: 'Integrador', cor: '#f1a3a0' },
+           { id: 'qa-adversario', nome: 'QA adversário', placa: 'QA', cor: '#f2d36b' },
+           { id: 'vigia', nome: 'Gerente de operações', placa: 'Gerente', cor: '#4fb477', naFileiraDoLider: true },
+         ],
+         pilha: { Spec: 'analista-processos', Desenvolvimento: 'desenvolvedor', 'Revisão': 'qa-adversario' },
+         // Pilha por etiqueta (fora de "Concluído"): entregas liberadas esperando vaga ficam na mesa do Gerente.
+         pilhaEtiqueta: { pronto: 'vigia' } },
+  // Agentes de EfetivaGestao/escritorio-bi/.claude/agents.
+  bi: { nome: 'BI', repo: 'https://github.com/EfetivaGestao/escritorio-bi',
+        colunas: ['Ideia', 'Em andamento', 'Aguardando dono', 'Concluído'],
+        agentes: [
+          { id: 'conferidor', nome: 'Conferidor', cor: '#f2d36b' },
+          { id: 'engenheiro-dados', nome: 'Engenheiro de dados', placa: 'Eng. dados', cor: '#8fbfe6' },
+          { id: 'designer-visual', nome: 'Designer visual', placa: 'Visual', cor: '#f1a3a0' },
+        ],
+        pilha: { 'Em andamento': 'lider-tecnico' },
+        // Mesa do Rogério agrupada pelo arquivo (começo do título até o ":"): ele abre cada BI uma vez.
+        mesaPorArquivo: true },
+  // Agentes de EfetivaGestao/escritorio-protax/.claude/agents.
+  protax: { nome: 'PROTAX', repo: 'https://github.com/EfetivaGestao/escritorio-protax',
+            colunas: ['Ideia', 'Em andamento', 'Aguardando dono', 'Homologação', 'Concluído'],
+            agentes: [
+              { id: 'desenvolvedor', nome: 'Desenvolvedor', cor: '#86d0ab' },
+              { id: 'especialista-tributario', nome: 'Especialista tributário', placa: 'Tributário', cor: '#f3bf86' },
+              { id: 'qa-adversario', nome: 'QA adversário', placa: 'QA', cor: '#f2d36b' },
+              { id: 'guardiao-dados', nome: 'Guardião de dados', placa: 'Dados', cor: '#b9a7e3' },
+            ],
+            pilha: { 'Em andamento': 'lider-tecnico' } },
+  // Agentes de EfetivaGestao/escritorio-efetivaone/.claude/agents.
+  efetivaone: { nome: 'EfetivaOne', repo: 'https://github.com/EfetivaGestao/escritorio-efetivaone',
+                colunas: ['Ideia', 'Em andamento', 'Aguardando dono', 'Homologação', 'Concluído'],
+                agentes: [
+                  { id: 'desenvolvedor', nome: 'Desenvolvedor', cor: '#86d0ab' },
+                  { id: 'designer-telas', nome: 'Designer de telas', placa: 'Telas', cor: '#f1a3a0' },
+                  { id: 'qa-adversario', nome: 'QA adversário', placa: 'QA', cor: '#f2d36b' },
+                  { id: 'auditor-lgpd', nome: 'Auditor LGPD', placa: 'LGPD', cor: '#9fd4d4' },
+                ],
+                pilha: { 'Em andamento': 'lider-tecnico' } },
+  // Agentes de EfetivaGestao/escritorio-marketing/.claude/agents.
+  marketing: { nome: 'Marketing', repo: 'https://github.com/EfetivaGestao/escritorio-marketing',
+               colunas: ['Ideia', 'Em andamento', 'Aguardando dono', 'Concluído'],
+               agentes: [
+                 { id: 'criador', nome: 'Criador', cor: '#86d0ab' },
+                 { id: 'revisor-de-marca', nome: 'Revisor de marca', placa: 'Revisor', cor: '#f2d36b' },
+               ],
+               pilha: { 'Em andamento': 'criador' } },
+};
+const ATUAL = ESCRITORIOS[new URLSearchParams(location.search).get('e')] ? new URLSearchParams(location.search).get('e') : 'erp';
+const REPO = ESCRITORIOS[ATUAL].repo;
+const COLUNAS = ESCRITORIOS[ATUAL].colunas;
+const NOMES = {
+  'lider-tecnico': 'Líder', 'vigia': 'Gerente de operações', 'Explore': 'Pesquisador (código)', 'general-purpose': 'Assistente geral',
+  'claude-code-guide': 'Pesquisador (Claude Code)', 'Plan': 'Planejador',
+  ...Object.fromEntries(Object.values(ESCRITORIOS).flatMap((e) => e.agentes.map((a) => [a.id, a.nome]))),
+};
+const EVENTOS = {
+  sessao_inicio: 'abriu sessão', sessao_fim: 'encerrou sessão', turno_fim: 'concluiu um turno',
+  subagente_inicio: 'começou', subagente_fim: 'terminou',
+};
+
+// Guarda a sessão na memória da página e, quando o navegador permitir, também no localStorage.
+// Navegadores com proteção de privacidade às vezes descartam a gravação em silêncio; sem a cópia
+// em memória a sessão sumia logo após o login ("Auth session missing").
+const memoria = {};
+let armazenamentoBloqueado = false;
+const armazenamento = {
+  getItem(k) {
+    try { const v = localStorage.getItem(k); if (v != null) return v; } catch {}
+    return memoria[k] ?? null;
+  },
+  setItem(k, v) {
+    memoria[k] = v;
+    try { localStorage.setItem(k, v); if (localStorage.getItem(k) !== v) armazenamentoBloqueado = true; }
+    catch { armazenamentoBloqueado = true; }
+  },
+  removeItem(k) { delete memoria[k]; try { localStorage.removeItem(k); } catch {} },
+};
+document.title = `Escritório ${ESCRITORIOS[ATUAL].nome}`;
+document.getElementById('titulo').textContent = `Escritório ${ESCRITORIOS[ATUAL].nome}`;
+document.getElementById('escritorios').innerHTML = Object.entries(ESCRITORIOS)
+  .map(([id, e]) => id === ATUAL ? `<b>${e.nome}</b>` : `<a href="?e=${id}">${e.nome}</a>`).join(' · ');
+// Modo demonstração (?demo=cheia|ociosa|pendencia): só dados fictícios, sem login e sem tocar no banco.
+const pedidoDemo = new URLSearchParams(location.search).get('demo');
+const DEMO = pedidoDemo === null ? null : ['cheia', 'ociosa', 'pendencia', 'parado'].includes(pedidoDemo) ? pedidoDemo : 'cheia';
+const db = DEMO ? null : supabase.createClient(SUPABASE_URL, SUPABASE_PUBLICA, { auth: { storage: armazenamento } });
+const $ = (id) => document.getElementById(id);
+const brl = (v) => Number(v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const nome = (a) => NOMES[a] || a;
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const issueLink = (n) => (n ? `<a href="${REPO}/issues/${n}" target="_blank" rel="noopener">#${n}</a>` : '');
+
+function ha(data) {
+  const min = Math.round((Date.now() - new Date(data)) / 60000);
+  if (min < 1) return 'agora';
+  if (min < 60) return `há ${min} min`;
+  const h = Math.floor(min / 60);
+  if (h < 24) return `há ${h} h${min % 60 ? ' ' + (min % 60) + ' min' : ''}`;
+  return new Date(data).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+}
+function diaSP(offsetDias = 0) {
+  const d = new Date(Date.now() - offsetDias * 86400e3);
+  return d.toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' }); // AAAA-MM-DD
+}
+
+async function carregar() {
+  const desde12h = new Date(Date.now() - 12 * 3600e3).toISOString();
+  const [ev, fila, custo, plano] = await Promise.all([
+    db.from('eventos').select('*').eq('escritorio', ATUAL).gte('criado_em', desde12h).order('criado_em', { ascending: false }).limit(500),
+    ATUAL === 'erp' ? db.from('fila').select('*') : db.from('fila_escritorios').select('*').eq('escritorio', ATUAL),
+    db.from('custo_diario_escritorio').select('*').eq('escritorio', ATUAL).gte('dia', diaSP(29)),
+    db.from('plano_atual').select('*').maybeSingle(),
+  ]);
+  const erro = ev.error || fila.error || custo.error || plano.error;
+  if (erro) throw erro;
+
+  desenharTudo(ev.data, fila.data, custo.data, plano.data);
+  const hora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  // A fila nunca fica vazia em uso normal: vazio sem erro = o banco não reconheceu o login.
+  if (!fila.data.length && ATUAL === 'erp') await diagnosticar(hora);
+  else $('atualizado').textContent = `${usuarioAtual} · atualizado ${hora}` +
+    (armazenamentoBloqueado ? ' · este navegador não guarda o login: ao recarregar, entre de novo' : '');
+}
+
+function desenharTudo(eventos, fila, custo, plano) {
+  desenharSala(eventos, fila, custo, plano);
+  desenharAguardando(fila);
+  desenharAgora(eventos, fila);
+  desenharCusto(custo);
+  desenharPlano(plano);
+  desenharFila(fila);
+  desenharAtividade(eventos.slice(0, 15));
+}
+
+async function diagnosticar(hora) {
+  const { data: s } = await db.auth.getSession();
+  const { data: u, error: eu } = await db.auth.getUser();
+  const exp = s.session ? new Date(s.session.expires_at * 1000).toLocaleTimeString('pt-BR') : '—';
+  $('atualizado').innerHTML = `<span style="color:var(--vermelho)">⚠ o banco respondeu vazio às ${hora}</span>
+    · sessão local: ${s.session ? 'sim, expira ' + exp : 'NÃO'}
+    · validação no servidor: ${eu ? 'falhou (' + esc(eu.message) + ')' : esc(u.user?.email)}
+    · navegador: ${esc(navigator.userAgent.match(/(Edg|OPR|Chrome|Firefox|Safari)\/[\d.]+/)?.[0] || '?')}`;
+}
+
+// Itens da mesa do Rogério. Com `mesaPorArquivo`, os do mesmo arquivo ("Imperagro, Crédito: ...")
+// viram uma linha só; entrega pronta (etiqueta `feita`) é "validar".
+function itensDaMesa(itens) {
+  const tag = (f) => (f.coluna === 'Homologação' || (f.etiquetas || []).includes('feita') ? 'validar' : 'decidir');
+  const linha = (f) => `<li><span class="tag dono">${tag(f)}</span> <span>${issueLink(f.issue)} ${esc(f.titulo)}</span></li>`;
+  if (!ESCRITORIOS[ATUAL].mesaPorArquivo) return itens.map(linha).join('');
+  const chave = (t) => (t.indexOf(':') > 0 ? t.slice(0, t.indexOf(':')).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim() : null);
+  const grupos = new Map();
+  for (const f of itens) {
+    const k = chave(f.titulo || '') ?? `#${f.issue}`;
+    if (!grupos.has(k)) grupos.set(k, []);
+    grupos.get(k).push(f);
+  }
+  return [...grupos.values()].map((g) => {
+    if (g.length === 1) return linha(g[0]);
+    const nome = g[0].titulo.slice(0, g[0].titulo.indexOf(':'));
+    const tags = [...new Set(g.map(tag))].join(' e ');
+    return `<li><span class="tag dono">${tags}</span> <span><b>${esc(nome)}</b>: ${g.length} itens no mesmo arquivo
+      ${g.map((f) => `<br>${issueLink(f.issue)} ${esc(f.titulo.slice(f.titulo.indexOf(':') + 1).trim())}`).join('')}</span></li>`;
+  }).join('');
+}
+
+function desenharAguardando(fila) {
+  const itens = fila.filter((f) => f.coluna === 'Aguardando dono' || f.coluna === 'Homologação')
+    .sort((a, b) => a.issue - b.issue);
+  $('aguardando').innerHTML = itens.length ? itensDaMesa(itens) : '<li class="vazio">Nada pendente com você.</li>';
+}
+
+const ABERTA_MIN = 15;   // sessão conta como aberta com sinal nos últimos 15 min (ou subagente aberto)
+
+// Quem está trabalhando agora. Mesma regra para a sala e para a lista.
+// Eventos vêm do mais novo para o mais antigo.
+function analisar(eventos) {
+  const agora = Date.now(), min = (d) => (agora - new Date(d)) / 60e3;
+  const abertos = new Map(), fechados = new Set(), ultimo = new Map(), ultimoQualquer = new Map(),
+    issueSessao = new Map(), resumoSessao = new Map(), inicioSessao = new Map();
+  for (const e of eventos) {
+    if (!ultimoQualquer.has(e.sessao_id)) ultimoQualquer.set(e.sessao_id, e.criado_em);
+    if (e.evento === 'subagente_fim') fechados.add(e.agente_id);
+    if (e.evento === 'subagente_inicio' && !fechados.has(e.agente_id) && !abertos.has(e.agente_id)) abertos.set(e.agente_id, e);
+    if (e.agente_id) continue;
+    if (!ultimo.has(e.sessao_id)) ultimo.set(e.sessao_id, e);
+    if (e.issue && !issueSessao.has(e.sessao_id)) issueSessao.set(e.sessao_id, e.issue);
+    if (e.resumo && !resumoSessao.has(e.sessao_id)) resumoSessao.set(e.sessao_id, e.resumo);
+    inicioSessao.set(e.sessao_id, e.criado_em);
+  }
+  const todos = [...abertos.values()]
+    .filter((e) => ultimo.get(e.sessao_id)?.evento !== 'sessao_fim')
+    .map((e) => ({ ...e, issue: e.issue ?? issueSessao.get(e.sessao_id) ?? null,
+      semSinalMin: min(ultimoQualquer.get(e.sessao_id)),
+      semSinal: estaParado(min(e.criado_em), min(ultimoQualquer.get(e.sessao_id))) }));
+  // Sem sinal há mais de 60 min não é "trabalhando": vai para `parados` (#90).
+  const ativos = todos.filter((e) => !e.semSinal), parados = todos.filter((e) => e.semSinal);
+  const lideres = [];
+  for (const [sid, s] of ultimo) {
+    if (s.evento === 'sessao_fim') continue;
+    const filhos = ativos.filter((x) => x.sessao_id === sid);
+    if (!filhos.length && min(s.criado_em) >= ABERTA_MIN) continue;
+    lideres.push({ sid, issue: issueSessao.get(sid) ?? null, filhos, trabalhando: filhos.length > 0 || s.evento !== 'turno_fim',
+      desde: inicioSessao.get(sid), sinal: s.criado_em, resumo: resumoSessao.get(sid) });
+  }
+  // Subagente aberto cuja sessão não tem evento do líder na janela: a sessão também está aberta.
+  for (const a of ativos) {
+    if (ultimo.has(a.sessao_id) || lideres.some((l) => l.sid === a.sessao_id)) continue;
+    const filhos = ativos.filter((x) => x.sessao_id === a.sessao_id);
+    lideres.push({ sid: a.sessao_id, issue: filhos.find((x) => x.issue)?.issue ?? null, filhos, trabalhando: true,
+      desde: filhos[filhos.length - 1].criado_em, sinal: filhos[0].criado_em, resumo: null });
+  }
+  lideres.sort((a, b) => (a.issue ?? 1e9) - (b.issue ?? 1e9));
+  return { ativos, parados, lideres };
+}
+
+function desenharAgora(eventos, fila) {
+  const { ativos, parados, lideres } = analisar(eventos);
+  const grupos = new Map();
+  const grupo = (n) => grupos.get(n) ?? grupos.set(n, { subs: [], lideres: [] }).get(n);
+  for (const l of lideres) grupo(l.issue).lideres.push(l);
+  for (const a of ativos) grupo(a.issue).subs.push(a);
+  const semIssue = grupos.get(null);
+  grupos.delete(null);
+  const linhas = [...grupos.entries()].sort((a, b) => a[0] - b[0]).map(([n, g]) => {
+    const f = fila.find((x) => x.issue === n);
+    const quem = g.subs.length
+      ? g.subs.map((a) => `<div class="quem"><span class="ponto"></span><span>${nome(a.agente)}${a.resumo ? ` — ${esc(a.resumo)}` : ''}
+          <span class="suave">· ${ha(a.criado_em)}</span></span></div>`).join('')
+      : g.lideres.map((l) => `<div class="quem"><span class="ponto ${l.trabalhando ? '' : 'ocioso'}"></span><span>Líder técnico
+          ${l.trabalhando ? 'coordenando' : 'concluiu o turno, aguardando'} <span class="suave">· último sinal ${ha(l.sinal)}</span></span></div>`).join('');
+    return `<li class="grupo"><div>${issueLink(n)} ${f ? esc(f.titulo) : '<span class="suave">fora do quadro</span>'}
+      ${f?.coluna ? `<span class="tag">${esc(f.coluna)}</span>` : ''}</div>${quem}</li>`;
+  });
+  if (semIssue) {
+    const n = semIssue.lideres.length || 1, s = semIssue.subs.length;
+    linhas.push(`<li class="suave">${n} ${n > 1 ? 'sessões' : 'sessão'} sem issue${s ? ` · ${s} ${s > 1 ? 'agentes trabalhando' : 'agente trabalhando'}` : ''}</li>`);
+  }
+  // Parados (sem sinal há mais de 60 min): fora de "trabalhando", só um aviso discreto (#90).
+  const avisoParados = parados.map((a) => `<li class="suave"><span class="ponto ocioso"></span> ${nome(a.agente)}${a.issue ? ' · ' + issueLink(a.issue) : ''}:
+    ${textoParado(a.semSinalMin)}</li>`);
+  $('agora').innerHTML = linhas.join('') || '<li class="vazio">Ninguém trabalhando agora.</li>';
+  if (avisoParados.length) $('agora').innerHTML += avisoParados.join('');
+}
+
+function desenharCusto(linhas) {
+  const hoje = diaSP(0), sete = diaSP(6);
+  const soma = (f) => linhas.filter(f).reduce((s, l) => s + Number(l.custo_brl), 0);
+  $('k-hoje').textContent = brl(soma((l) => l.dia === hoje));
+  $('k-semana').textContent = brl(soma((l) => l.dia >= sete));
+  $('k-mes').textContent = brl(soma(() => true));
+
+  const porAgente = {};
+  for (const l of linhas) {
+    const a = (porAgente[l.agente] ??= { hoje: 0, sete: 0, mes: 0, chamadas: 0 });
+    const v = Number(l.custo_brl);
+    if (l.dia === hoje) a.hoje += v;
+    if (l.dia >= sete) a.sete += v;
+    a.mes += v; a.chamadas += Number(l.chamadas);
+  }
+  const ag = Object.entries(porAgente).sort((a, b) => b[1].mes - a[1].mes);
+  $('t-agente').innerHTML = '<tr><th>Agente</th><th>Hoje</th><th>7 dias</th><th>30 dias</th><th>Chamadas</th></tr>' +
+    (ag.length ? ag.map(([k, v]) => `<tr><td>${nome(k)}</td><td>${brl(v.hoje)}</td><td>${brl(v.sete)}</td>
+      <td>${brl(v.mes)}</td><td>${v.chamadas}</td></tr>`).join('') : '<tr><td class="vazio" colspan="5">Sem consumo.</td></tr>');
+
+  const porIssue = {};
+  for (const l of linhas) {
+    const k = l.issue ?? 'sem';
+    const i = (porIssue[k] ??= { brl: 0, chamadas: 0, agentes: new Set() });
+    i.brl += Number(l.custo_brl); i.chamadas += Number(l.chamadas); i.agentes.add(l.agente);
+  }
+  const is = Object.entries(porIssue).sort((a, b) => b[1].brl - a[1].brl).slice(0, 12);
+  $('t-issue').innerHTML = '<tr><th>Tarefa</th><th>Agentes</th><th>Chamadas</th><th>R$</th></tr>' +
+    (is.length ? is.map(([k, v]) => `<tr><td>${k === 'sem' ? '<span class="suave">fora de issue</span>' : issueLink(k)}</td>
+      <td>${v.agentes.size}</td><td>${v.chamadas}</td><td>${brl(v.brl)}</td></tr>`).join('')
+      : '<tr><td class="vazio" colspan="4">Sem consumo.</td></tr>');
+}
+
+function desenharPlano(p) {
+  const barra = (idBarra, idTexto, v) => {
+    $(idTexto).textContent = v == null ? '–' : `${Math.round(v)}%`;
+    const b = $(idBarra);
+    b.querySelector('i').style.width = `${Math.min(100, v ?? 0)}%`;
+    b.className = 'barra' + (v >= 90 ? ' critico' : v >= 70 ? ' alerta' : '');
+  };
+  barra('b5', 'p5', p?.cinco_horas_pct);
+  barra('bs', 'ps', p?.semanal_pct);
+  $('p-quando').textContent = p ? `medido ${ha(p.criado_em)}` : 'Aguardando a primeira medição.';
+}
+
+function desenharFila(fila) {
+  $('fila').innerHTML = COLUNAS.map((c) => {
+    const itens = fila.filter((f) => f.coluna === c).sort((a, b) => a.issue - b.issue);
+    return `<div class="coluna"><h3>${c} <span class="suave">${itens.length}</span></h3>${
+      itens.map((f) => `<div class="item">${issueLink(f.issue)} ${esc(f.titulo)}
+        ${f.etiquetas.includes('risco-alto') ? '<div><span class="tag alto">risco alto</span></div>' : ''}</div>`).join('')
+    }</div>`;
+  }).join('');
+}
+
+function desenharAtividade(eventos) {
+  $('atividade').innerHTML = eventos.length
+    ? eventos.map((e) => `<li><span class="suave" style="min-width:92px">${ha(e.criado_em)}</span>
+        <span><b>${nome(e.agente)}</b> ${EVENTOS[e.evento] || e.evento} ${issueLink(e.issue)}
+        ${e.resumo ? `<span class="suave">— ${esc(e.resumo)}</span>` : ''}</span></li>`).join('')
+    : '<li class="vazio">Sem atividade nas últimas 12 horas.</li>';
+}
+
+// ---------------- Sala animada (#14) ----------------
+const LIDER = 'lider-tecnico';
+const COR_LIDER = '#e6ebee';
+const AGENTES_SALA = ESCRITORIOS[ATUAL].agentes.includes(ASSISTENTE)
+  ? ESCRITORIOS[ATUAL].agentes : [...ESCRITORIOS[ATUAL].agentes, ASSISTENTE];
+const DECLARADOS = AGENTES_SALA.map((a) => a.id).filter((id) => id !== ASSISTENTE.id);
+const PILHA = ESCRITORIOS[ATUAL].pilha || {};
+const PILHA_ETIQUETA = ESCRITORIOS[ATUAL].pilhaEtiqueta || {};
+
+// <logica-vigia> Funções puras (testadas por escritorio/painel/logica-vigia.test.mjs, que lê este bloco).
+const VIGIA = 'vigia';
+const SEM_SINAL_MIN = 60; // subagente aberto há mais que isso, sem nenhum evento da sessão: parado (#90), não trabalhando
+// Parado = aberto há mais de `limite` min E a sessão inteira sem evento há mais de `limite` min.
+function estaParado(minAberto, minSessao, limite = SEM_SINAL_MIN) { return minAberto > limite && minSessao > limite; }
+function textoParado(minSessao) {
+  const m = Math.round(minSessao), h = Math.floor(m / 60);
+  return `parado — sem sinal há ${h ? `${h} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}` : `${m} min`}`;
+}
+const VIGIA_RECENTE_MIN = 2; // pedido do dono (19/10): "minuto a minuto"; 2 min "A confirmar" (vigia roda a cada 1 min, painel atualiza a cada 30 s)
+// O vigia só grava evento quando FEZ algo (ou deu aviso) e não abre subagente. "Trabalhando" conta só
+// rodada com AÇÃO (dados.decisao diferente de 'aviso'); avisos ficam na lista de eventos do detalhe.
+function estadoVigia(eventos, agora = Date.now()) {
+  const meus = eventos.filter((e) => e.agente === VIGIA || e.agente_id === VIGIA)
+    .sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em));
+  const ultimo = meus.find((e) => e.dados?.decisao !== 'aviso') ?? null; // última ação
+  return { eventos: meus, ultimo, trabalhando: !!ultimo && (agora - new Date(ultimo.criado_em)) / 60e3 <= VIGIA_RECENTE_MIN };
+}
+// Papéis na mesa: itens cuja coluna aponta para a mesa (pilha) ou cuja etiqueta aponta (pilhaEtiqueta, fora de Concluído).
+function contarPilha(fila, mesa, pilha = {}, pilhaEtiqueta = {}) {
+  return fila.filter((f) => pilha[f.coluna] === mesa ||
+    (f.coluna !== 'Concluído' && (f.etiquetas || []).some((t) => pilhaEtiqueta[t] === mesa))).length;
+}
+// </logica-vigia>
+// Mesas no piso, em ladrilhos isométricos (i cresce para a direita-baixo, j para a esquerda-baixo).
+// Fileiras desencontradas para os balões de uma fileira não taparem os da outra; a última fileira
+// de agentes é sempre a deslocada, para o líder sentar entre eles e não na frente.
+// `naFileiraDoLider` (Gerente): mesa própria no fim da fileira do líder, sem abrir uma 3ª fileira com uma mesa só.
+const GRADE = AGENTES_SALA.filter((a) => !a.naFileiraDoLider);
+const POR_FILEIRA = 4, FILEIRAS = Math.ceil(GRADE.length / POR_FILEIRA);
+const MESAS = Object.fromEntries(GRADE.map((a, k) => {
+  const f = Math.floor(k / POR_FILEIRA);
+  return [a.id, [3.0 + 3.8 * (k % POR_FILEIRA) + ((FILEIRAS - 1 - f) % 2 ? 0 : 1.7), 2.6 + 3.8 * f]];
+}));
+// A sala cresce com as mesas (mínimo para caber o quadro); a fileira do líder ocupa a largura (2 ou 3 mesas).
+const LARGURA_GRADE = Math.max(13.4, ...Object.values(MESAS).map(([i]) => i + 1.3));
+const J_LIDER = 2.6 + 3.8 * FILEIRAS;
+const MESAS_LIDER = Array.from({ length: Math.min(3, Math.max(2, Math.floor((LARGURA_GRADE - 7.9) / 3.8) + 1)) },
+  (_, k) => [6.6 + 3.8 * k, J_LIDER]);
+for (const a of AGENTES_SALA.filter((x) => x.naFileiraDoLider)) {
+  MESAS[a.id] = [MESAS_LIDER[MESAS_LIDER.length - 1][0] + 3.8, J_LIDER];
+}
+const LARGURA = Math.max(LARGURA_GRADE, ...Object.values(MESAS).map(([i]) => i + 1.3));
+const MESA_DONO = [2.6, J_LIDER + 0.2];
+const PISO = { i: LARGURA, j: J_LIDER + 1.4, parede: 245 };
+// Enquadra o desenho no tamanho da sala: sala menor também ocupa menos tela.
+{
+  const x0 = Math.round(450 - (PISO.j + 0.3) * 36 - 10), w = Math.round(450 + (PISO.i + 0.3) * 36 + 9 - x0);
+  $('sala').setAttribute('viewBox', `${x0} 15 ${w} ${Math.round(273 + (PISO.i + PISO.j) * 18)}`);
+  $('sala').style.maxWidth = `${Math.round(1000 * w / 1084)}px`;
+}
+
+const P = (i, j, z = 0) => [450 + (i - j) * 36, 265 + (i + j) * 18 - z];
+const pts = (...ps) => ps.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+const poli = (cls, ...ps) => `<polygon class="${cls}" points="${pts(...ps)}"/>`;
+// Bloco isométrico: tampo + face da frente (+j) + face lateral (+i).
+function caixa(i, j, di, dj, z, h, cls) {
+  const t = z + h;
+  return poli(`${cls} topo`, P(i, j, t), P(i + di, j, t), P(i + di, j + dj, t), P(i, j + dj, t)) +
+    poli(`${cls} frente`, P(i, j + dj, t), P(i + di, j + dj, t), P(i + di, j + dj, z), P(i, j + dj, z)) +
+    poli(`${cls} lado`, P(i + di, j, t), P(i + di, j + dj, t), P(i + di, j + dj, z), P(i + di, j, z));
+}
+// Plano paralelo ao eixo i (parede do fundo à direita, frente das mesas): texto e formas "deitam" junto.
+const planoI = ([x, y], dentro) => `<g transform="matrix(1 .5 0 1 ${x.toFixed(1)} ${y.toFixed(1)})">${dentro}</g>`;
+const corta = (s, n) => (s && s.length > n ? s.slice(0, n - 1) + '…' : s || '');
+function cronometro(desde) {
+  const s = Math.max(0, Math.floor((Date.now() - new Date(desde)) / 1000));
+  const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, p = (n) => String(n).padStart(2, '0');
+  return h ? `${h}:${p(m)}:${p(s % 60)}` : `${p(m)}:${p(s % 60)}`;
+}
+const nivel = (v) => (v >= 90 ? 'critico' : v >= 70 ? 'alerta' : '');
+
+function comodo() {
+  const { i: I, j: J, parede: H } = PISO;
+  let h = poli('laje', P(0, J), P(I, J), P(I, J, -12), P(0, J, -12)) +
+    poli('laje', P(I, 0), P(I, J), P(I, J, -12), P(I, 0, -12)) +
+    poli('piso', P(0, 0), P(I, 0), P(I, J), P(0, J));
+  for (let i = 1; i < I; i++) h += `<line class="piso-linha" x1="${P(i, 0)[0]}" y1="${P(i, 0)[1]}" x2="${P(i, J)[0]}" y2="${P(i, J)[1]}"/>`;
+  for (let j = 1; j < J; j++) h += `<line class="piso-linha" x1="${P(0, j)[0]}" y1="${P(0, j)[1]}" x2="${P(I, j)[0]}" y2="${P(I, j)[1]}"/>`;
+  h += poli('parede-e', P(0, 0), P(0, J), P(0, J, H), P(0, 0, H)) +
+    poli('parede-d', P(0, 0), P(I, 0), P(I, 0, H), P(0, 0, H)) +
+    poli('rodape', P(0, 0), P(0, J), P(0, J, 8), P(0, 0, 8)) +
+    poli('rodape', P(0, 0), P(I, 0), P(I, 0, 8), P(0, 0, 8)) +
+    poli('tampo-parede', P(0, 0, H), P(0, J, H), P(-0.3, J, H), P(-0.3, -0.3, H), P(I, -0.3, H), P(I, 0, H)) +
+    poli('rodape', P(0, J), P(-0.3, J), P(-0.3, J, H), P(0, J, H)) +
+    poli('rodape', P(I, 0), P(I, -0.3), P(I, -0.3, H), P(I, 0, H));
+  // Janela (parede esquerda) e porta perto da mesa do Rogério; em sala curta a janela vai para o canto.
+  const [ja, jb] = J >= 11 ? [2.2, 5.4] : [0.6, J - 4.8], jm = (ja + jb) / 2;
+  h += poli('janela', P(0, ja, 100), P(0, jb, 100), P(0, jb, 185), P(0, ja, 185)) +
+    `<polyline class="caixilho" points="${pts(P(0, jm, 100), P(0, jm, 185))}"/>` +
+    `<polygon class="caixilho" points="${pts(P(0, ja, 100), P(0, jb, 100), P(0, jb, 185), P(0, ja, 185))}"/>` +
+    poli('batente', P(0, J - 4.2, 0), P(0, J - 1.8, 0), P(0, J - 1.8, 122), P(0, J - 4.2, 122)) +
+    poli('porta', P(0, J - 4.05, 0), P(0, J - 1.95, 0), P(0, J - 1.95, 116), P(0, J - 4.05, 116)) +
+    `<circle class="macaneta" cx="${P(0, J - 2.25, 58)[0]}" cy="${P(0, J - 2.25, 58)[1]}" r="3.5"/>`;
+  // Vaso de planta no canto do fundo.
+  const [px, py] = P(I - 0.7, 0.7, 34);
+  h += caixa(I - 1.0, 0.4, 0.6, 0.6, 0, 20, 'vaso') +
+    `<ellipse class="folha" cx="${px}" cy="${py}" rx="13" ry="20"/><ellipse class="folha" cx="${px - 12}" cy="${py + 8}" rx="9" ry="14" transform="rotate(-25 ${px - 12} ${py + 8})"/>` +
+    `<ellipse class="folha" cx="${px + 12}" cy="${py + 8}" rx="9" ry="14" transform="rotate(25 ${px + 12} ${py + 8})"/>`;
+  // Relógio na parede (horário de Brasília; os ponteiros andam no tique).
+  h += planoI(P(Math.max(I - 3.6, 12.4), 0, 205), `<circle class="relogio" r="17"/><line class="ponteiro" id="ponteiro-h" y2="-9"/>
+    <line class="ponteiro" id="ponteiro-m" y2="-14" style="stroke-width:1.4"/>`);
+  return `<g aria-hidden="true">${h}</g>`;
+}
+
+function quadro(plano, custoHoje) {
+  const barra = (y, rot, v) => `<text class="quadro-rotulo" x="14" y="${y + 10}">${rot}</text>
+    <rect class="trilho" x="74" y="${y}" width="120" height="11" rx="5"/>
+    <rect class="nivel ${nivel(v)}" x="74" y="${y}" width="${(1.2 * Math.min(100, v ?? 0)).toFixed(1)}" height="11" rx="5"/>
+    <text class="quadro-rotulo" x="202" y="${y + 10}" style="font-weight:700;fill:var(--texto)">${v == null ? '–' : Math.round(v) + '%'}</text>`;
+  const rotulo = `Quadro: plano de 5 horas ${plano?.cinco_horas_pct == null ? 'sem medição' : Math.round(plano.cinco_horas_pct) + '%'}, ` +
+    `semana ${plano?.semanal_pct == null ? 'sem medição' : Math.round(plano.semanal_pct) + '%'}, custo equivalente hoje ${brl(custoHoje)}. Ver detalhes.`;
+  return `<g class="estacao" data-chave="quadro" tabindex="0" role="button" aria-label="${esc(rotulo)}">` +
+    planoI(P(5.0, 0, 236), `<rect class="quadro" width="245" height="112" rx="6"/>
+      <text class="quadro-titulo" x="14" y="22">Plano Max · hoje</text>${barra(34, '5 horas', plano?.cinco_horas_pct)}
+      ${barra(55, 'Semana', plano?.semanal_pct)}<text class="quadro-rotulo" x="14" y="98">Custo do dia</text>
+      <text class="quadro-valor" x="102" y="99">${esc(brl(custoHoje))}</text>`) + '</g>';
+}
+
+function robo(s, sx, sy) {
+  const olhos = s.trabalhando
+    ? '<circle class="olho" cx="-7" cy="-73.5" r="3.4"/><circle class="olho" cx="7" cy="-73.5" r="3.4"/>'
+    : '<path class="olho-fechado" d="M-11 -73 q4 3.5 8 0 M3 -73 q4 3.5 8 0"/>';
+  return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})">
+    <rect class="corpo" x="-19" y="-54" width="38" height="40" rx="13"/>
+    <rect class="painel" x="-9" y="-46" width="18" height="11" rx="3"/>
+    ${s.tipo === 'lider' ? '<path class="gravata" d="M0 -54 l4 6 -4 15 -4 -15z"/>' : '<circle class="led" cx="0" cy="-40.5" r="2.6"/>'}
+    <g class="cabeca">
+      <line class="haste" x1="0" y1="-89" x2="0" y2="-97"/><circle class="lampada" cx="0" cy="-100" r="4.2"/>
+      <rect class="corpo" x="-27" y="-80" width="8" height="13" rx="3"/><rect class="corpo" x="19" y="-80" width="8" height="13" rx="3"/>
+      <rect class="corpo" x="-22" y="-90" width="44" height="34" rx="14"/>
+      <rect class="visor" x="-16" y="-83" width="32" height="19" rx="8"/>${olhos}
+    </g></g>`;
+}
+const maos = (sx, sy) => `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})">
+  <g class="mao-e"><line class="braco" x1="-16" y1="-46" x2="-10" y2="-14"/><circle class="mao" cx="-10" cy="-12" r="4.6"/></g>
+  <g class="mao-d"><line class="braco" x1="16" y1="-46" x2="10" y2="-14"/><circle class="mao" cx="10" cy="-12" r="4.6"/></g></g>`;
+
+function monitor(ci, cj, aceso) {
+  const j = cj - 0.3, a = ci - 1.05, b = ci - 0.15;
+  let h = caixa(ci - 0.7, cj - 0.42, 0.2, 0.14, 26, 9, 'pe') +
+    poli('moldura', P(a, j - 0.12, 70), P(b, j - 0.12, 70), P(b, j, 70), P(a, j, 70)) +
+    poli('moldura', P(b, j - 0.12, 70), P(b, j, 70), P(b, j, 33), P(b, j - 0.12, 33)) +
+    poli('moldura', P(a, j, 70), P(b, j, 70), P(b, j, 33), P(a, j, 33)) +
+    poli(`tela${aceso ? ' acesa' : ''}`, P(a + 0.07, j, 66), P(b - 0.07, j, 66), P(b - 0.07, j, 37), P(a + 0.07, j, 37));
+  if (aceso) {
+    h += planoI(P(a + 0.15, j, 62), [18, 11, 21, 8].map((w, k) => `<rect class="codigo" x="${k % 2 ? 4 : 0}" y="${k * 5.5}" width="${w}" height="2.6" rx="1"/>`).join('') +
+      '<rect class="codigo cursor" x="12" y="22" width="4" height="2.6"/>');
+  }
+  return h;
+}
+
+function pilha(i, j, n) {
+  let h = '';
+  const k = Math.min(n, 8);
+  for (let q = 0; q < k; q++) h += caixa(i - 0.27 + (q % 2 ? 0.04 : -0.03), j - 0.2, 0.55, 0.4, 26 + q * 3.2, 2.2, 'papel');
+  const [x, y] = P(i, j, 26 + k * 3.2 + 14);
+  return h + `<g class="contador"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10"/>
+    <text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle">${n}</text></g>`;
+}
+
+function placa(ci, cj, texto) {
+  return planoI(P(ci - 0.85, cj + 0.55, 21), `<rect class="placa" width="61.2" height="13" rx="3"/>
+    <text class="placa-texto" x="30.6" y="9.8" text-anchor="middle">${esc(texto)}</text>`);
+}
+
+function rotuloEstacao(s) {
+  if (s.tipo === 'dono') {
+    const n = s.pendentes.length;
+    return `Mesa do Rogério: ${n ? `${n} ${n > 1 ? 'itens aguardando' : 'item aguardando'} você` : 'nada aguardando você'}. Ver detalhes.`;
+  }
+  if (s.tipo === 'vazia') return `Mesa do líder técnico: nenhuma sessão aberta${s.papeis ? `, ${s.papeis} na fila` : ''}. Ver detalhes.`;
+  return `${s.nome}: ${s.trabalhando ? `trabalhando${s.issue ? ' na #' + s.issue : ''}${s.resumo ? ' (' + s.resumo + ')' : ''}, ${s.rotuloDesde || 'começou'} ${ha(s.desde)}`
+    : s.parado ? s.parado.texto : 'ocioso'}` +
+    `${s.papeis ? `, ${s.papeis} na fila` : ''}. Ver detalhes.`;
+}
+
+function estacao(s) {
+  const [ci, cj] = s.pos, [sx, sy] = P(ci, cj - 0.95);
+  const temRobo = s.tipo !== 'vazia' && s.tipo !== 'dono';
+  const estado = temRobo ? (s.trabalhando ? 'trabalhando' : 'ocioso') : '';
+  let h = `<g class="estacao ${estado}" data-chave="${esc(s.chave)}" tabindex="0" role="button" aria-label="${esc(rotuloEstacao(s))}" style="--cor:${s.cor || '#ccc'}">` +
+    poli('realce', P(ci - 1.35, cj - 1.7), P(ci + 1.35, cj - 1.7), P(ci + 1.35, cj + 0.8), P(ci - 1.35, cj + 0.8)) +
+    `<g aria-hidden="true"><rect class="cadeira" x="${(sx - 24).toFixed(1)}" y="${(sy - 72).toFixed(1)}" width="48" height="52" rx="12"/>`;
+  if (temRobo) h += robo(s, sx, sy);
+  h += caixa(ci - 1.1, cj - 0.55, 2.2, 1.1, 0, 26, 'mesa');
+  if (s.tipo === 'dono') {
+    h += caixa(ci - 0.2, cj - 0.35, 0.8, 0.55, 26, 7, 'bandeja');
+    for (let q = 0; q < Math.min(s.pendentes.length, 5); q++) h += caixa(ci - 0.12, cj - 0.28, 0.64, 0.42, 28 + q * 2.4, 1.6, 'papel');
+    if (s.pendentes.length) {
+      h += `<polygon class="brilho piscando" points="${pts(P(ci - 0.3, cj - 0.45, 26), P(ci + 0.7, cj - 0.45, 26), P(ci + 0.7, cj + 0.3, 26), P(ci - 0.3, cj + 0.3, 26))}"/>`;
+    }
+  } else {
+    h += monitor(ci, cj, temRobo && s.trabalhando) +
+      caixa(ci + 0.1, cj - 0.52, 0.8, 0.24, 26, 2, 'teclado');
+  }
+  if (s.papeis) h += pilha(ci + 0.75, cj + 0.15, s.papeis);
+  if (temRobo) h += maos(sx, sy);
+  h += placa(ci, cj, s.placa) + '</g></g>';
+  return h;
+}
+
+// Balão com ponta em (x, y). Versão larga (desktop) e curta (celular); o CSS mostra uma das duas.
+function balao(x, y, l1, l2, desde, cls = '') {
+  const forma = (w, h) => {
+    const e = x - w / 2, d = x + w / 2, t = y - 8 - h, b = y - 8, r = 9;
+    return `<path class="balao ${cls}" d="M${e + r} ${t}H${d - r}Q${d} ${t} ${d} ${t + r}V${b - r}Q${d} ${b} ${d - r} ${b}` +
+      `H${x + 6}L${x} ${y}L${x - 6} ${b}H${e + r}Q${e} ${b} ${e} ${b - r}V${t + r}Q${e} ${t} ${e + r} ${t}Z"/>`;
+  };
+  const crono = desde ? ` · <tspan class="crono" data-desde="${esc(desde)}">${cronometro(desde)}</tspan>` : '';
+  const n1 = l1.length + (desde ? 10 : 0);
+  const wl = Math.max(n1 * 8.3, l2 ? l2.length * 6.1 : 0) + 20, hl = l2 ? 40 : 25;
+  const curto = l1 + (desde ? ' ' : ''), wc = (curto.length + (desde ? 5 : 0)) * 11.2 + 16;
+  return `<g class="b-largo">${forma(wl, hl)}<text class="b1" x="${x}" y="${y - 8 - hl + 17}" text-anchor="middle">${esc(l1)}${crono}</text>` +
+    (l2 ? `<text class="b2" x="${x}" y="${y - 15}" text-anchor="middle">${esc(l2)}</text>` : '') + '</g>' +
+    `<g class="b-curto">${forma(wc, 30)}<text class="bc" x="${x}" y="${y - 16}" text-anchor="middle">${esc(curto)}${crono.replace(' · ', '')}</text></g>`;
+}
+
+let sala = { info: new Map() };
+let detalheAberto = null;
+
+function desenharSala(eventos, fila, custo, plano) {
+  const hoje = diaSP(0);
+  const custoHoje = (f) => custo.filter((l) => l.dia === hoje && f(l)).reduce((s, l) => s + Number(l.custo_brl), 0);
+  const { ativos, parados, lideres } = analisar(eventos);
+
+  const est = [];
+  const ehAssistente = (a) => !DECLARADOS.includes(a) && a !== LIDER;
+  const naPilha = (mesa) => contarPilha(fila, mesa, PILHA, PILHA_ETIQUETA);
+  for (const ag of AGENTES_SALA) {
+    const papel = ag.id;
+    const doPapel = papel === 'assistente' ? (x) => ehAssistente(x.agente) : (x) => x.agente === papel;
+    if (papel === VIGIA) {
+      // Mesa própria: o vigia não abre subagente nem sessão; o estado vem dos eventos dele.
+      const v = estadoVigia(eventos), u = v.ultimo;
+      est.push({
+        chave: papel, pos: MESAS[papel], cor: ag.cor, placa: ag.placa || ag.nome, nome: ag.nome,
+        trabalhando: v.trabalhando, issue: v.trabalhando ? u.issue : null, desde: u?.criado_em, extras: 0,
+        resumo: v.trabalhando ? u.resumo : null, papeis: naPilha(papel),
+        eventos: v.eventos.slice(0, 5), semCusto: true, rotuloDesde: 'última ação',
+      });
+      continue;
+    }
+    const meus = ativos.filter(doPapel), e = meus[0];
+    est.push({
+      chave: papel, pos: MESAS[papel], cor: ag.cor, placa: ag.placa || ag.nome, nome: ag.nome,
+      trabalhando: !!e, issue: e?.issue, desde: e?.criado_em, extras: Math.max(0, meus.length - 1),
+      parado: e ? null : (p => p ? { texto: textoParado(p.semSinalMin), issue: p.issue, desde: p.criado_em } : null)(parados.find(doPapel)),
+      resumo: e ? (papel === 'assistente' ? nome(e.agente) + (e.resumo ? ': ' + e.resumo : '') : e.resumo) : null,
+      papeis: naPilha(papel),
+      eventos: eventos.filter(doPapel).slice(0, 5), custo: custoHoje(doPapel), custoRotulo: 'Custo equivalente hoje',
+    });
+  }
+  const visiveis = lideres.slice(0, MESAS_LIDER.length);
+  visiveis.forEach((l, k) => est.push({
+    chave: 'lider:' + l.sid, tipo: 'lider', pos: MESAS_LIDER[k], cor: COR_LIDER,
+    placa: l.issue ? `Líder #${l.issue}` : 'Líder', nome: 'Líder técnico' + (l.issue ? ` · #${l.issue}` : ''),
+    trabalhando: l.trabalhando, issue: l.issue, desde: l.desde, filhos: l.filhos.length,
+    resumo: l.filhos.length ? `acompanhando ${l.filhos.length} ${l.filhos.length > 1 ? 'agentes' : 'agente'}` : l.trabalhando ? 'coordenando' : l.resumo,
+    extras: k === visiveis.length - 1 ? lideres.length - visiveis.length : 0, extrasRotulo: 'sessões abertas',
+    papeis: k === 0 ? naPilha(LIDER) : 0,
+    eventos: eventos.filter((e) => e.sessao_id === l.sid).slice(0, 5),
+    custo: custoHoje((x) => x.agente === LIDER && (!l.issue || x.issue === l.issue)),
+    custoRotulo: l.issue ? `Custo equivalente hoje do líder na #${l.issue}` : 'Custo equivalente hoje (líder, todas as sessões)',
+  }));
+  if (!visiveis.length) est.push({
+    chave: 'lider-vazio', tipo: 'vazia', pos: MESAS_LIDER[0], placa: 'Líder', nome: 'Líder técnico', papeis: naPilha(LIDER),
+    eventos: eventos.filter((e) => e.agente === LIDER && !e.agente_id).slice(0, 5),
+    custo: custoHoje((x) => x.agente === LIDER), custoRotulo: 'Custo equivalente hoje (líder)',
+  });
+  const pendentes = fila.filter((f) => f.coluna === 'Aguardando dono' || f.coluna === 'Homologação').sort((a, b) => a.issue - b.issue);
+  est.push({ chave: 'dono', tipo: 'dono', pos: MESA_DONO, placa: 'Rogério', nome: 'Mesa do Rogério', pendentes, papeis: 0 });
+  est.sort((a, b) => a.pos[0] + a.pos[1] - (b.pos[0] + b.pos[1]));
+
+  const totalHoje = custoHoje(() => true);
+  let baloes = '';
+  for (const s of est) {
+    const [ci, cj] = s.pos, [x, y] = P(ci, cj - 0.95);
+    if (s.tipo === 'dono' && s.pendentes.length) {
+      const [bx, by] = P(ci + 0.2, cj - 0.1, 80);
+      baloes += balao(bx, by, `${s.pendentes.length} aguardando você`, '', null, 'dono');
+    } else if (s.tipo === 'dono' || s.tipo === 'vazia') {
+      continue;
+    } else if (s.trabalhando) {
+      const extra = s.extras ? `+${s.extras} ${s.extrasRotulo || 'em paralelo'}` : '';
+      baloes += balao(x + 4, y - 106, s.issue ? `#${s.issue}` : 'trabalhando', corta([extra, s.resumo].filter(Boolean).join(' · '), 22), s.desde);
+    } else if (s.parado) {
+      baloes += balao(x + 4, y - 106, `${s.parado.issue ? '#' + s.parado.issue + ' ' : ''}parado`, corta(s.parado.texto.replace('parado — ', ''), 28), null, 'dono');
+    } else {
+      baloes += `<g class="zz"><text x="${x + 20}" y="${y - 96}" style="font-size:11px">z</text>
+        <text x="${x + 27}" y="${y - 104}" style="font-size:14px">Z</text><text x="${x + 35}" y="${y - 113}" style="font-size:11px">z</text></g>`;
+    }
+  }
+
+  // Preserva o foco do teclado entre redesenhos.
+  const focada = document.activeElement?.closest?.('.estacao')?.dataset.chave;
+  $('sala').innerHTML = comodo() + quadro(plano, totalHoje) + est.map(estacao).join('') +
+    `<g aria-hidden="true" style="pointer-events:none">${baloes}</g>`;
+  sala = { info: new Map(est.map((s) => [s.chave, s])), plano, totalHoje };
+  if (focada) document.querySelector(`.estacao[data-chave="${CSS.escape(focada)}"]`)?.focus();
+
+  const trab = est.filter((s) => s.trabalhando);
+  $('sala-resumo').textContent = (trab.length
+    ? `${trab.length} trabalhando: ${trab.map((s) => s.nome + (s.issue ? ' na #' + s.issue : '')).join('; ')}.`
+    : 'Ninguém trabalhando agora.') +
+    ` ${pendentes.length ? pendentes.length + ' aguardando você.' : 'Nada aguardando você.'}`;
+  tique();
+  if (detalheAberto) sala.info.has(detalheAberto) || detalheAberto === 'quadro' ? abrirDetalhe(detalheAberto) : fecharDetalhe();
+}
+
+function conteudoDetalhe(chave) {
+  if (chave === 'quadro') {
+    const p = sala.plano;
+    const pct = (v) => (v == null ? 'sem medição' : Math.round(v) + '%');
+    return `<h3 id="det-titulo">Quadro do plano</h3>
+      <div>Janela de 5 horas: <b>${pct(p?.cinco_horas_pct)}</b></div><div>Semana: <b>${pct(p?.semanal_pct)}</b></div>
+      <div>Custo equivalente hoje: <b>${brl(sala.totalHoje)}</b></div>
+      <div class="suave">${p ? 'medido ' + ha(p.criado_em) : 'Aguardando a primeira medição.'}</div>`;
+  }
+  const s = sala.info.get(chave);
+  if (s.tipo === 'dono') {
+    return `<h3 id="det-titulo">Mesa do Rogério</h3>` + (s.pendentes.length
+      ? `<ul class="lista">${itensDaMesa(s.pendentes)}</ul>`
+      : '<div class="vazio">Nada aguardando você.</div>');
+  }
+  const estado = s.tipo === 'vazia' ? 'Nenhuma sessão aberta.'
+    : s.trabalhando ? `Trabalhando${s.issue ? ' na ' + issueLink(s.issue) : ''} · ${s.rotuloDesde || 'começou'} ${ha(s.desde)}` +
+      (s.resumo ? ` · ${esc(s.resumo)}` : '') + (s.extras ? ` · +${s.extras} ${s.extrasRotulo || 'em paralelo'}` : '') +
+      '' : s.parado ? `<b style="color:var(--ambar)">${s.parado.texto[0].toUpperCase() + s.parado.texto.slice(1)}</b>` : 'Ocioso.';
+  return `<h3 id="det-titulo">${esc(s.nome)}</h3><div class="suave">${estado}</div>
+    ${s.semCusto ? '' : `<div style="margin-top:6px">${esc(s.custoRotulo)}: <b>${brl(s.custo)}</b></div>`}
+    <h4>Últimos eventos</h4>` + (s.eventos.length
+    ? `<ul class="lista">${s.eventos.map((e) => `<li><span class="suave">${ha(e.criado_em)}</span> · ${esc(nome(e.agente))}
+        ${EVENTOS[e.evento] || esc(e.evento)} ${issueLink(e.issue)}${e.resumo ? ` <span class="suave">— ${esc(corta(e.resumo, 120))}</span>` : ''}</li>`).join('')}</ul>`
+    : '<div class="vazio">Sem atividade nas últimas 12 horas.</div>');
+}
+
+function abrirDetalhe(chave) {
+  const alvo = document.querySelector(`.estacao[data-chave="${CSS.escape(chave)}"]`);
+  if (!alvo) return fecharDetalhe();
+  detalheAberto = chave;
+  const d = $('sala-detalhe'), caixaSala = $('sala-caixa');
+  $('det-conteudo').innerHTML = conteudoDetalhe(chave);
+  d.hidden = false;
+  const r = alvo.getBoundingClientRect(), c = caixaSala.getBoundingClientRect();
+  const w = d.offsetWidth, h = d.offsetHeight;
+  const left = Math.max(0, Math.min(c.width - w, r.left - c.left + r.width / 2 - w / 2));
+  let top = r.bottom - c.top + 6;
+  if (top + h > c.height && r.top - c.top - h - 6 >= 0) top = r.top - c.top - h - 6;
+  d.style.left = `${left}px`; d.style.top = `${Math.max(0, top)}px`;
+}
+function fecharDetalhe(devolverFoco = false) {
+  const chave = detalheAberto;
+  detalheAberto = null;
+  $('sala-detalhe').hidden = true;
+  if (devolverFoco && chave) document.querySelector(`.estacao[data-chave="${CSS.escape(chave)}"]`)?.focus();
+}
+$('sala').addEventListener('click', (ev) => {
+  const alvo = ev.target.closest('.estacao');
+  if (!alvo) return fecharDetalhe();
+  const chave = alvo.dataset.chave;
+  detalheAberto === chave ? fecharDetalhe() : abrirDetalhe(chave);
+});
+$('sala').addEventListener('keydown', (ev) => {
+  const alvo = ev.target.closest?.('.estacao');
+  if (alvo && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); abrirDetalhe(alvo.dataset.chave); }
+});
+$('det-fechar').addEventListener('click', () => fecharDetalhe(true));
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape' && detalheAberto) fecharDetalhe(true); });
+document.addEventListener('click', (ev) => {
+  if (detalheAberto && !ev.target.closest('#sala-detalhe') && !ev.target.closest('#sala')) fecharDetalhe();
+});
+
+// Cronômetros dos balões e relógio da parede: só texto e atributos, uma vez por segundo.
+function tique() {
+  if (document.hidden) return;
+  for (const t of document.querySelectorAll('.sala .crono')) t.textContent = cronometro(t.dataset.desde);
+  const [h, m] = new Date().toLocaleTimeString('en-GB', { timeZone: 'America/Sao_Paulo', hour12: false })
+    .split(':').map(Number);
+  $('ponteiro-h')?.setAttribute('transform', `rotate(${(h % 12) * 30 + m / 2})`);
+  $('ponteiro-m')?.setAttribute('transform', `rotate(${m * 6})`);
+}
+setInterval(tique, 1000);
+
+// ---------------- Dados fictícios do modo demonstração ----------------
+function dadosDemo(cenario) {
+  const agora = Date.now();
+  const quando = (min) => new Date(agora - min * 60e3).toISOString();
+  const eventos = [];
+  const ev = (min, sessao, agente, evento, issue, extra = {}) => eventos.push({
+    id: eventos.length + 1, criado_em: quando(min), sessao_id: sessao, agente, agente_id: extra.id ?? null, evento, issue,
+    branch: issue ? `issue-${issue}-exemplo` : null, resumo: extra.resumo ?? null, dados: extra.dados ?? {},
+  });
+  const fila = [];
+  const item = (issue, coluna, titulo, etiquetas = []) => fila.push({
+    issue, coluna, titulo: `[exemplo] ${titulo}`, etiquetas, url: `${REPO}/issues/${issue}`,
+  });
+  const custo = [];
+  const gasto = (dias, agente, issue, brlValor, chamadas) => custo.push({
+    dia: diaSP(dias), agente, issue, modelo: 'exemplo', chamadas, custo_usd: brlValor / 5.4, custo_brl: brlValor,
+  });
+  let plano;
+
+  if (ATUAL === 'bi' && cenario === 'cheia') {
+    ev(70, 'demo-s1', LIDER, 'sessao_inicio', 921);
+    ev(18, 'demo-s1', 'engenheiro-dados', 'subagente_inicio', 921, { id: 'demo-e1', resumo: 'Consulta de vendas por safra' });
+    ev(40, 'demo-s2', LIDER, 'sessao_inicio', 922);
+    ev(6, 'demo-s2', 'conferidor', 'subagente_inicio', 922, { id: 'demo-c1', resumo: 'Conferir painel de estoque' });
+    ev(3, 'demo-s2', 'Explore', 'subagente_inicio', 922, { id: 'demo-x1', resumo: 'Achar consulta parecida' });
+    ev(5, 'demo-s3', LIDER, 'sessao_inicio', null);
+    item(921, 'Em andamento', 'Painel de vendas por safra'); item(922, 'Em andamento', 'Painel de estoque');
+    item(923, 'Em andamento', 'Margem por cliente'); item(924, 'Ideia', 'Ranking de vendedores');
+    item(925, 'Aguardando dono', 'Painel de inadimplência'); item(926, 'Concluído', 'Faturamento mensal');
+    gasto(0, LIDER, 921, 18.2, 66); gasto(0, LIDER, 922, 9.4, 35); gasto(0, 'engenheiro-dados', 921, 7.1, 26);
+    gasto(0, 'conferidor', 922, 2.3, 9); gasto(0, 'Explore', 922, 0.8, 4); gasto(2, LIDER, 926, 24.0, 95);
+    plano = { cinco_horas_pct: 52, semanal_pct: 38, criado_em: quando(2) };
+  } else if (ATUAL === 'bi' && cenario === 'ociosa') {
+    ev(260, 'demo-s1', LIDER, 'sessao_inicio', 921);
+    ev(240, 'demo-s1', 'engenheiro-dados', 'subagente_inicio', 921, { id: 'demo-e1', resumo: 'Consulta de vendas por safra' });
+    ev(205, 'demo-s1', 'engenheiro-dados', 'subagente_fim', 921, { id: 'demo-e1', resumo: 'Consulta de exemplo pronta' });
+    ev(190, 'demo-s1', LIDER, 'turno_fim', 921, { resumo: 'Painel publicado; handoff escrito' });
+    ev(188, 'demo-s1', LIDER, 'sessao_fim', 921);
+    item(924, 'Ideia', 'Ranking de vendedores'); item(927, 'Ideia', 'Previsão de recebimentos');
+    item(921, 'Concluído', 'Painel de vendas por safra'); item(926, 'Concluído', 'Faturamento mensal');
+    gasto(0, LIDER, 921, 6.4, 25); gasto(0, 'engenheiro-dados', 921, 3.9, 15); gasto(2, LIDER, 926, 24.0, 95);
+    plano = { cinco_horas_pct: 4, semanal_pct: 19, criado_em: quando(4) };
+  } else if (ATUAL === 'bi') {
+    ev(38, 'demo-s1', LIDER, 'sessao_inicio', 925);
+    ev(27, 'demo-s1', 'conferidor', 'subagente_inicio', 925, { id: 'demo-c1', resumo: 'Conferir painel de inadimplência' });
+    ev(14, 'demo-s1', 'conferidor', 'subagente_fim', 925, { id: 'demo-c1', resumo: 'APROVADO: números de exemplo conferem' });
+    ev(5, 'demo-s1', LIDER, 'turno_fim', 925, { resumo: 'Rogério, preciso de: aprovação do painel' });
+    item(925, 'Aguardando dono', 'Painel de inadimplência'); item(928, 'Aguardando dono', 'Cores do painel de estoque');
+    item(923, 'Em andamento', 'Margem por cliente'); item(924, 'Ideia', 'Ranking de vendedores');
+    gasto(0, LIDER, 925, 11.2, 42); gasto(0, 'conferidor', 925, 2.6, 10); gasto(1, LIDER, 923, 13.5, 51);
+    plano = { cinco_horas_pct: 31, semanal_pct: 88, criado_em: quando(1) };
+  } else if (cenario === 'cheia') {
+    ev(95, 'demo-s1', LIDER, 'sessao_inicio', 901);
+    ev(90, 'demo-s1', 'analista-processos', 'subagente_inicio', 901, { id: 'demo-a1', resumo: 'Spec do cadastro de clientes' });
+    ev(62, 'demo-s1', 'analista-processos', 'subagente_fim', 901, { id: 'demo-a1', resumo: 'Spec do cadastro de exemplo pronta' });
+    ev(60, 'demo-s1', LIDER, 'turno_fim', 901, { resumo: 'Spec pronta; desenvolvedor e integrador acionados' });
+    ev(26, 'demo-s1', 'desenvolvedor', 'subagente_inicio', 901, { id: 'demo-d1', resumo: 'Implementar tela de cadastro' });
+    ev(12, 'demo-s1', 'integrador', 'subagente_inicio', 901, { id: 'demo-i1', resumo: 'Adaptador de consulta de CEP' });
+    ev(3, 'demo-s1', 'Explore', 'subagente_inicio', 901, { id: 'demo-x1', resumo: 'Achar validações existentes' });
+    ev(48, 'demo-s2', LIDER, 'sessao_inicio', 903);
+    ev(9, 'demo-s2', 'qa-adversario', 'subagente_inicio', 903, { id: 'demo-q1', resumo: 'Revisar importação de notas' });
+    ev(31, 'demo-s3', LIDER, 'sessao_inicio', 904);
+    ev(7, 'demo-s3', 'analista-processos', 'subagente_inicio', 904, { id: 'demo-a2', resumo: 'Spec do cálculo de frete' });
+    ev(4, 'demo-s3', 'especialista-fiscal', 'subagente_inicio', 904, { id: 'demo-f1', resumo: 'Conferir regra do frete' });
+    ev(80, 'demo-s4', LIDER, 'sessao_inicio', 902);
+    ev(75, 'demo-s4', 'guardiao-dados', 'subagente_inicio', 902, { id: 'demo-g1', resumo: 'Revisar tabela de vendas' });
+    ev(6, 'demo-s5', LIDER, 'sessao_inicio', null);
+    ev(1, 'vigia', 'vigia', 'turno_fim', 905, { id: 'vigia', resumo: 'acionei uma sessão para a #905 — entrega pronta e há vaga no plano' });
+    ev(35, 'vigia', 'vigia', 'turno_fim', 906, { id: 'vigia', dados: { decisao: 'aviso' }, resumo: 'avisei o Rogério na #906 — faltava uma decisão' });
+    item(912, 'Spec', 'Cadastro de safras', ['pronto']); item(913, 'Spec', 'Tabela de preços', ['pronto']);
+    item(914, 'Ideia', 'Mapa de entregas', ['pronto']); item(915, 'Concluído', 'Importação de clientes', ['pronto']);
+    item(901, 'Desenvolvimento', 'Cadastro de clientes', ['risco-alto']); item(902, 'Desenvolvimento', 'Relatório de vendas');
+    item(905, 'Desenvolvimento', 'Tela de pedidos'); item(903, 'Revisão', 'Importação de notas');
+    item(904, 'Spec', 'Cálculo de frete'); item(906, 'Spec', 'Agenda de visitas'); item(907, 'Spec', 'Etiquetas de estoque');
+    item(908, 'Ideia', 'Painel de safra'); item(909, 'Concluído', 'Login do sistema');
+    gasto(0, LIDER, 901, 38.4, 140); gasto(0, LIDER, 903, 12.1, 52); gasto(0, LIDER, 904, 6.3, 21);
+    gasto(0, 'analista-processos', 901, 9.8, 33); gasto(0, 'desenvolvedor', 901, 21.5, 77); gasto(0, 'integrador', 901, 4.2, 15);
+    gasto(0, 'qa-adversario', 903, 5.6, 19); gasto(0, 'Explore', 901, 1.1, 6);
+    gasto(1, LIDER, 902, 41.0, 150); gasto(3, 'desenvolvedor', 902, 33.2, 120); gasto(12, LIDER, 909, 55.0, 210);
+    plano = { cinco_horas_pct: 68, semanal_pct: 43, criado_em: quando(2) };
+  } else if (cenario === 'parado') {
+    // Sessão-mãe acabou há horas e o evento de fim nunca chegou: o robô aparece parado, não trabalhando (#90).
+    ev(400, 'demo-s1', LIDER, 'sessao_inicio', 902);
+    ev(380, 'demo-s1', 'desenvolvedor', 'subagente_inicio', 902, { id: 'demo-d1', resumo: 'Implementar relatório' });
+    ev(375, 'demo-s1', LIDER, 'turno_fim', 902);
+    item(902, 'Desenvolvimento', 'Relatório de vendas'); item(908, 'Ideia', 'Painel de safra');
+    gasto(0, LIDER, 902, 7.9, 30); gasto(0, 'desenvolvedor', 902, 6.2, 24);
+    plano = { cinco_horas_pct: 3, semanal_pct: 22, criado_em: quando(4) };
+  } else if (cenario === 'ociosa') {
+    ev(300, 'demo-s1', LIDER, 'sessao_inicio', 902);
+    ev(280, 'demo-s1', 'desenvolvedor', 'subagente_inicio', 902, { id: 'demo-d1', resumo: 'Implementar relatório' });
+    ev(240, 'demo-s1', 'desenvolvedor', 'subagente_fim', 902, { id: 'demo-d1', resumo: 'Relatório de exemplo implementado com testes' });
+    ev(232, 'demo-s1', LIDER, 'turno_fim', 902, { resumo: 'PR aberto; handoff escrito' });
+    ev(230, 'demo-s1', LIDER, 'sessao_fim', 902);
+    ev(150, 'vigia', 'vigia', 'turno_fim', 902, { id: 'vigia', resumo: 'movi a #902 para Concluído — PR aprovado e integrado' });
+    item(912, 'Spec', 'Cadastro de safras', ['pronto']);
+    item(908, 'Ideia', 'Painel de safra'); item(910, 'Ideia', 'Cotação de insumos');
+    item(902, 'Concluído', 'Relatório de vendas'); item(909, 'Concluído', 'Login do sistema');
+    gasto(0, LIDER, 902, 7.9, 30); gasto(0, 'desenvolvedor', 902, 6.2, 24); gasto(2, LIDER, 909, 22.0, 90);
+    plano = { cinco_horas_pct: 3, semanal_pct: 22, criado_em: quando(4) };
+  } else {
+    ev(42, 'demo-s1', LIDER, 'sessao_inicio', 907);
+    ev(33, 'demo-s1', 'qa-adversario', 'subagente_inicio', 907, { id: 'demo-q1', resumo: 'Revisar etiquetas de estoque' });
+    ev(16, 'demo-s1', 'qa-adversario', 'subagente_fim', 907, { id: 'demo-q1', resumo: 'APROVADO: nenhum defeito encontrado' });
+    ev(5, 'demo-s1', LIDER, 'turno_fim', 907, { resumo: 'Rogério, preciso de: aprovação das capturas' });
+    ev(25, 'vigia', 'vigia', 'turno_fim', 911, { id: 'vigia', dados: { decisao: 'aviso' }, resumo: 'avisei o Rogério na #911 — escolha do emissor aguarda decisão' });
+    item(912, 'Spec', 'Cadastro de safras', ['pronto']); item(913, 'Spec', 'Tabela de preços', ['pronto']);
+    item(907, 'Aguardando dono', 'Etiquetas de estoque'); item(911, 'Aguardando dono', 'Escolha do emissor de nota', ['risco-alto']);
+    item(905, 'Homologação', 'Tela de pedidos'); item(904, 'Spec', 'Cálculo de frete');
+    item(901, 'Desenvolvimento', 'Cadastro de clientes', ['risco-alto']); item(908, 'Ideia', 'Painel de safra');
+    gasto(0, LIDER, 907, 14.7, 55); gasto(0, 'qa-adversario', 907, 4.9, 18); gasto(1, LIDER, 905, 18.0, 70);
+    plano = { cinco_horas_pct: 35, semanal_pct: 91, criado_em: quando(1) };
+  }
+  eventos.sort((a, b) => b.criado_em.localeCompare(a.criado_em));
+  return { eventos, fila, custo, plano };
+}
+
+function iniciarDemo() {
+  const d = dadosDemo(DEMO);
+  $('login').hidden = true; $('painel').hidden = false; $('aviso-demo').hidden = false;
+  desenharTudo(d.eventos, d.fila, d.custo, d.plano);
+  $('atualizado').textContent = `demonstração "${DEMO}" · dados fictícios`;
+  $('sair').textContent = 'sair da demonstração';
+  $('sair').addEventListener('click', () => { location.search = ''; });
+}
+
+let timer = null;
+let usuarioAtual = '';
+async function iniciarPainel(aposLogin = false) {
+  // Confere o login no servidor antes de consultar; sessão local inválida volta para a tela de login.
+  const { data, error } = await db.auth.getUser();
+  if (error || !data.user) {
+    await db.auth.signOut();
+    mostrarLogin();
+    if (aposLogin) $('erro-login').textContent = 'O servidor aceitou a senha, mas não validou a sessão: ' +
+      (error?.message || 'sessão ausente') + '. Envie esta mensagem ao líder técnico.';
+    return;
+  }
+  usuarioAtual = data.user.email;
+  $('login').hidden = true; $('painel').hidden = false;
+  const ciclo = async () => {
+    try { await carregar(); }
+    catch (e) { $('atualizado').textContent = 'erro ao atualizar: ' + (e.message || e); }
+  };
+  await ciclo();
+  clearInterval(timer); timer = setInterval(ciclo, 30000);
+}
+function mostrarLogin() {
+  clearInterval(timer);
+  $('painel').hidden = true; $('login').hidden = false;
+}
+
+$('form-login').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  $('erro-login').textContent = '';
+  const { data, error } = await db.auth.signInWithPassword({ email: $('email').value.trim(), password: $('senha').value });
+  if (error) { $('erro-login').textContent = 'E-mail ou senha incorretos.'; return; }
+  // O token traz o horário do servidor; comparar com o relógio local revela relógio/fuso errado,
+  // que faz a biblioteca considerar a sessão vencida e descartá-la.
+  const s = data.session;
+  const emitidoServidor = (s.expires_at - s.expires_in) * 1000;
+  const diferencaMin = Math.round((Date.now() - emitidoServidor) / 60000);
+  if (Math.abs(diferencaMin) > 5) {
+    const h = Math.floor(Math.abs(diferencaMin) / 60), m = Math.abs(diferencaMin) % 60;
+    $('erro-login').innerHTML = `Login aceito, mas o relógio deste computador está <b>${h ? h + ' h ' : ''}${m} min
+      ${diferencaMin > 0 ? 'adiantado' : 'atrasado'}</b> em relação ao horário oficial. Com essa diferença o navegador
+      descarta o login. Ajuste data, hora e fuso horário (no Windows: Configurações → Hora e idioma →
+      Data e hora → ative "Definir horário automaticamente" e "Definir fuso horário automaticamente")
+      e recarregue a página.`;
+    return;
+  }
+  iniciarPainel(true);
+});
+if (DEMO) iniciarDemo();
+else {
+  $('sair').addEventListener('click', async () => { await db.auth.signOut(); mostrarLogin(); });
+  db.auth.getSession().then(({ data }) => (data.session ? iniciarPainel() : mostrarLogin()));
+}
+</script>
+</body>
+</html>
